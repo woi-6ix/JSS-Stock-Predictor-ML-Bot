@@ -1,0 +1,42 @@
+#need to install finance package
+
+!pip install yfinance
+import yfinance as yf
+
+#need to define start and end dates to define scope of Stock values
+from datetime import datetime
+end = datetime.now()
+start = datetime(end.year - 10, end.month, end.day) #can subtract 20 years from current year
+
+#initalize Stock variable
+stock = "SQ"
+blockinc_data = yf.download(stock, start, end)
+
+#Visualize data from past 10 years
+blockinc_data.head()       #table data
+blockinc_data.shape        #shape of table (rows, columns)
+blockinc_data.describe()   #data statisitics
+blockinc_data.info()       #data types inside data set (null values, floats, etc)
+blockinc_data.isna().sum() #checks for any null values and sums it up, if zero then data is clean set
+
+#Graphing Data
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+plt.figure(figsize = (15,5))
+blockinc_data['Adj Close'].plot() #using Ajd Close Price as it is more accurate than Close Price
+
+#Creating Function to plot graphs for each stock input by user
+def plot_graph(figsize, values, column_name):
+  plt.figure(figsize = (15,5))
+  values.plot(figsize = figsize)
+  
+  plt.xlabel("Years")
+  plt.ylabel(column_name)
+  plt.title(f"{column_name} of Block Inc Data")
+
+blockinc_data.columns
+
+#For loop to graph each with columns
+for column in blockinc_data.columns:
+  plot_graph((15,5), blockinc_data[column], column)
